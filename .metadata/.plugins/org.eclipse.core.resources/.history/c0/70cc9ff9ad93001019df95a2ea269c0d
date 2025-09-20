@@ -1,0 +1,17 @@
+package DBCOM;
+
+import java.sql.*;
+
+public class Dbcom 
+{
+	public static void main(String[] args)throws ClassNotFoundException ,SQLException
+	{
+	
+		Class.forName("com.mysql.cj.jdbc.Driver");//register and loading
+		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/vasavi","HAREKRISHNA","HAREKRISHNA");
+		System.out.println("Connected successfully......");
+		
+				
+	}
+
+}

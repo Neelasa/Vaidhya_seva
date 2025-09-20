@@ -1,0 +1,89 @@
+package com.flipkart.dao;
+
+import java.sql.*;
+
+import com.flipkart.bean.UserBean;
+//package com.flipkart.dao;
+//import com.flipkart.bean.UserBean;
+
+public class UserDao {
+
+	public static Connection con = getCon();
+	public static PreparedStatement ps ;
+	public static ResultSet rs;
+	public static Connection getCon()
+	{
+		try
+		{
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/vasavi","root","HAREKRISHNA");
+			System.out.println("Connected successfully");
+			return con;
+		}
+		catch(ClassNotFoundException cnf)
+		{
+			System.out.println(cnf);
+		}
+		catch(SQLException sql)
+		{
+			System.out.println(sql);
+		}
+		return con;
+	}
+	public static String checkUser(UserBean ub)
+
+	{
+
+		String str="Not Present";
+
+		try
+
+		{
+
+		ps=con.prepareStatement("select * from users where name=? and role=? and password=?");
+
+		ps.setString(1, ub.getName());
+
+		ps.setString(2, ub.getRole());
+
+		ps.setString(3,ub.getPassword());
+
+		rs=ps.executeQuery();
+
+		if(rs.next())
+
+		{
+
+	 if((ub.getName().equals(rs.getString(1)))&&(ub.getRole().equals(rs.getString(2)))&&(ub.getPassword().equals(rs.getString(3))))
+
+	 {
+
+	 return str=ub.getRole();
+
+	 }
+
+		}
+
+		else
+
+		{
+
+	 return str=ub.getRole();
+
+		}
+
+		}
+
+		catch(SQLException sql)
+
+		{
+
+	 System.out.println(sql);
+
+		}
+
+		return str;
+
+	}
+}
+

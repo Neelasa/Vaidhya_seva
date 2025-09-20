@@ -1,0 +1,57 @@
+package Doctor.dao;
+
+import Doctor.bean.DoctorBean;
+import java.sql.*;
+
+public class DoctorDao {
+
+    static final String DB_URL = "jdbc:mysql://localhost:3306/vaidhya_seva";
+    static final String USER = "root";
+    static final String PASS = "HAREKRISHNA";
+
+    // This method should be in a separate utility class for reusability.
+    public static Connection getCon() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection(DB_URL, USER, PASS);
+        } catch (Exception e) {
+            System.err.println("Database connection failed!");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Corrected method: use a specific type (String) instead of a generic Object
+    public static DoctorBean getDoctorById(String doctorId) {
+        DoctorBean bean = null;
+        String sql = "SELECT * FROM doctor WHERE DoctorId = ?";
+
+        // Use a try-with-resources statement to automatically close resources
+        try (Connection conn = getCon();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            // Check if connection is successful
+            if (conn == null) {
+                return null;
+            }
+
+            stmt.setString(1, doctorId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    bean = new DoctorBean();
+                    bean.setDoctorID(rs.getString("DoctorId"));
+                    bean.setDoctorName(rs.getString("DoctorName"));
+                    bean.setSpecialization(rs.getString("Specialization"));
+                    bean.setQualification(rs.getString("Qualification"));
+                    bean.setContactNumber(rs.getString("ContactNumber"));
+                    bean.setEmailID(rs.getString("EmailID"));
+                    // You can set other fields here as needed
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("SQL error occurred: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return bean;
+    }
+}

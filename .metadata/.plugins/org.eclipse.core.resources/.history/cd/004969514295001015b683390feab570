@@ -1,0 +1,142 @@
+package Doctor.dao;
+
+import javax.swing.JOptionPane;
+import java.sql.*;
+
+public class AdminDao {
+
+    static final String DB_URL = "jdbc:mysql://localhost:3306/vaidhya_seva";
+    static final String USER = "root";
+    static final String PASS = "HAREKRISHNA";
+
+    public static Connection getCon() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection(DB_URL, USER, PASS);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Database connection failed: " + e.getMessage());
+            return null;
+        }
+    }
+
+    //  Switch-case controller method
+    public static void handleDoctorOperations() {
+        Connection conn = getCon();
+        if (conn == null) return;
+
+        while (true) {
+            String[] options = {"Insert Doctor", "View Doctor", "Update Doctor", "Delete Doctor", "Back"};
+            int ch = JOptionPane.showOptionDialog(null, "Choose an operation", "Doctor Management",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+            try {
+                switch (ch) {
+                    case 0 -> insertDoctor(conn);
+                    case 1 -> viewDoctor(conn);
+                    case 2 -> updateDoctor(conn);
+                    case 3 -> deleteDoctor(conn);
+                    case 4 -> { conn.close(); return; }
+                    default -> JOptionPane.showMessageDialog(null, "Invalid choice");
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Operation failed: " + e.getMessage());
+            }
+        }
+    }
+
+    public static void insertDoctor(Connection conn) throws SQLException {
+        String doctorId = JOptionPane.showInputDialog("Enter Doctor ID:");
+        String name = JOptionPane.showInputDialog("Enter Doctor Name:");
+        String dob = JOptionPane.showInputDialog("Enter Date of Birth (YYYY-MM-DD):");
+        String doj = JOptionPane.showInputDialog("Enter Date of Joining (YYYY-MM-DD):");
+        String gender = JOptionPane.showInputDialog("Enter Gender:");
+        String qualification = JOptionPane.showInputDialog("Enter Qualification:");
+        String specialization = JOptionPane.showInputDialog("Enter Specialization:");
+        int experience = Integer.parseInt(JOptionPane.showInputDialog("Enter Years of Experience:"));
+        String street = JOptionPane.showInputDialog("Enter Street:");
+        String location = JOptionPane.showInputDialog("Enter Location:");
+        String city = JOptionPane.showInputDialog("Enter City:");
+        String state = JOptionPane.showInputDialog("Enter State:");
+        String pincode = JOptionPane.showInputDialog("Enter Pincode:");
+        String contact = JOptionPane.showInputDialog("Enter Contact Number:");
+        String email = JOptionPane.showInputDialog("Enter Email ID:");
+
+        String sql = "INSERT INTO doctor VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, doctorId);
+        stmt.setString(2, name);
+        stmt.setString(3, dob);
+        stmt.setString(4, doj);
+        stmt.setString(5, gender);
+        stmt.setString(6, qualification);
+        stmt.setString(7, specialization);
+        stmt.setInt	  (8, experience);
+        stmt.setString(9, street);
+        stmt.setString(10, location);
+        stmt.setString(11, city);
+        stmt.setString(12, state);
+        stmt.setString(13, pincode);
+        stmt.setString(14, contact);
+        stmt.setString(15, email);
+        stmt.executeUpdate();
+        JOptionPane.showMessageDialog(null, "Doctor inserted successfully.");
+    }
+
+    public static void viewDoctor(Connection conn) throws SQLException {
+        String doctorId = JOptionPane.showInputDialog("Enter Doctor ID to view:");
+        String sql = "SELECT * FROM doctor WHERE DoctorId = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, doctorId);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Doctor Details:\n");
+            sb.append("Name: ").append(rs.getString("DoctorName")).append("\n");
+            sb.append("DOB: ").append(rs.getString("DateOfbirth")).append("\n");
+            sb.append("DOJ: ").append(rs.getString("DateOfJoining")).append("\n");
+            sb.append("Gender: ").append(rs.getString("Gender")).append("\n");
+            sb.append("Qualification: ").append(rs.getString("Qualification")).append("\n");
+            sb.append("Specialization: ").append(rs.getString("Specializzation")).append("\n");
+            sb.append("Experience: ").append(rs.getInt("YearsOfExperience")).append("\n");
+            sb.append("Address: ").append(rs.getString("Street")).append(", ").append(rs.getString("Location")).append(", ").append(rs.getString("City")).append(", ").append(rs.getString("State")).append(" - ").append(rs.getString("Pincode")).append("\n");
+            sb.append("Contact: ").append(rs.getString("ContactNumber")).append("\n");
+            sb.append("Email: ").append(rs.getString("Emailid")).append("\n");
+            JOptionPane.showMessageDialog(null, sb.toString());
+        } else {
+            JOptionPane.showMessageDialog(null, "Doctor not found.");
+        }
+    }
+
+    public static void updateDoctor(Connection conn) throws SQLException {
+        String doctorId = JOptionPane.showInputDialog("Enter Doctor ID to update:");
+        String field = JOptionPane.showInputDialog("Enter field to update (e.g., DoctorName, Qualification):");
+        String newValue = JOptionPane.showInputDialog("Enter new value:");
+
+        String sql = "UPDATE doctor SET " + field + " = ? WHERE DoctorId = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, newValue);
+        stmt.setString(2, doctorId);
+        int rows = stmt.executeUpdate();
+
+        if (rows > 0) {
+            JOptionPane.showMessageDialog(null, "Doctor updated successfully.");
+        } else {
+            JOptionPane.showMessageDialog(null, "Doctor not found.");
+        }
+    }
+
+    public static void deleteDoctor(Connection conn) throws SQLException {
+        String doctorId = JOptionPane.showInputDialog("Enter Doctor ID to delete:");
+        String sql = "DELETE FROM doctor WHERE DoctorId = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, doctorId);
+        int rows = stmt.executeUpdate();
+
+        if (rows > 0) {
+            JOptionPane.showMessageDialog(null, "Doctor deleted successfully.");
+        } else {
+            JOptionPane.showMessageDialog(null, "Doctor not found.");
+        }
+    }
+}

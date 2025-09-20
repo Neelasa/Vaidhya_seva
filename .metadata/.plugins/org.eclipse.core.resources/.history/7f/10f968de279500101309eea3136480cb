@@ -1,0 +1,40 @@
+package Doctor.view;
+
+import Doctor.dao.AdminDao;
+import Doctor.dao.PatientDao;
+import Doctor.dao.ReporterDao;
+
+import javax.swing.*;
+
+public class DoctorView {
+    public static void main(String[] args) {
+        while (true) {
+            String[] options = {
+                "Doctor Management",
+                "Patient Management",
+                "Reporter Panel",
+                "Exit"
+            };
+
+            int choice = JOptionPane.showOptionDialog(
+                null,
+                "Select a module to proceed",
+                "Hospital Admin Panel",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                options,
+                options[0]
+            );
+            //this will check from the stored content in the database and the CRUD operations ... 
+            
+            switch (choice) {
+                case 0 -> AdminDao.handleDoctorOperations();     // Doctor CRUD->Insert,Update,Delete,View operations
+                case 1 -> PatientDao.handlePatientOperations();   // Insert + View Patient details
+                case 2 -> ReporterDao.handleReporterOperations(); // Check Doctor Leave 
+                case 3 -> System.exit(0);                         // Exit
+                default -> JOptionPane.showMessageDialog(null, "Invalid choice");
+            }
+        }
+    }
+}

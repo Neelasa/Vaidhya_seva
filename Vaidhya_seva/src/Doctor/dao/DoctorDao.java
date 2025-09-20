@@ -1,0 +1,68 @@
+package Doctor.dao;
+
+import Doctor.bean.DoctorBean;
+import java.sql.*;
+import java.util.ArrayList;
+
+public class DoctorDao {
+
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/vaidhya_seva";
+    private static final String USER = "root";
+    private static final String PASS = "HAREKRISHNA";
+
+    public static Connection getCon() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection(DB_URL, USER, PASS);
+        } catch (Exception e) {
+            System.err.println("Connection Error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public static DoctorBean getDoctorById(Object object) {
+        DoctorBean bean = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getCon();
+            if (conn == null) return null;
+
+            String sql = "SELECT * FROM doctor WHERE DoctorId = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, (String) object);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                bean = new DoctorBean();
+                bean.setDoctorID(rs.getString("DoctorId"));
+                bean.setDoctorName(rs.getString("DoctorName"));
+                bean.setSpecialization(rs.getString("Specialization"));
+                bean.setQualification(rs.getString("Qualification"));
+                bean.setContactNumber(rs.getString("ContactNo")); // FIXED: column name should match DB
+                bean.setEmailID(rs.getString("EmailID"));
+            }
+        } catch (SQLException e) {
+            System.err.println("SQL Error: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                System.err.println("Resource Closing Error: " + e.getMessage());
+            }
+        }
+
+        return bean;
+    }
+
+	public static ArrayList<DoctorBean> getAllDoctors() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+}

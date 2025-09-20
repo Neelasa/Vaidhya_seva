@@ -1,0 +1,92 @@
+package Doctor.dao;
+
+import java.sql.*;
+import javax.swing.JOptionPane;
+
+public class ReporterDao {
+
+    private static Connection con;
+    private static PreparedStatement ps;
+    private static ResultSet rs;
+
+    // Establish connection
+    public static Connection getCon() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection("jdbc:mysql://localhost:3306/vaidhya_seva", "root", "HAREKRISHNA");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Connection Error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // Switch-case controller for reporter operations
+    public static void handleReporterOperations() {
+        Connection conn = getCon();
+        if (conn == null) return;
+
+        while (true) {
+            String[] options = {"Check Doctor Leave", "Back"};
+            int ch = JOptionPane.showOptionDialog(null, "Choose an operation", "Reporter Panel",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+            switch (ch) {
+                case 0 -> {
+                    String doctorId = JOptionPane.showInputDialog("Enter Doctor ID:");
+                    checkDoctorLeave(conn, doctorId);
+                }
+                case 1 -> {
+                    try { conn.close(); } catch (Exception ignored) {}
+                    return;
+                }
+                default -> JOptionPane.showMessageDialog(null, "Invalid choice");
+            }
+        }
+    }
+
+    // Check if doctor is currently on leave
+    public static void checkDoctorLeave(Connection conn, String doctorId) {
+        try {
+            String query = """
+                SELECT Reason, Leave_From, Leave_To
+                FROM `leave`
+                WHERE DoctorId = ?
+                AND CURDATE() BETWEEN Leave_From AND Leave_To
+                AND Status = 1
+            """;
+
+            ps = conn.prepareStatement(query);
+            ps.setString(1, doctorId);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String reason = rs.getString("Reason");
+                String from = rs.getString("Leave_From");
+                String to = rs.getString("Leave_To");
+
+                JOptionPane.showMessageDialog(null,
+                    "Doctor ID: " + doctorId + " is currently on leave.\n" +
+                    "From: " + from + "\nTo: " + to + "\nReason: " + reason,
+                    "Leave Alert", JOptionPane.WARNING_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null,
+                    "Doctor ID: " + doctorId + " is available today.",
+                    "Availability Check", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } catch (SQLException sql) {
+            JOptionPane.showMessageDialog(null, "SQL Error: " + sql.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error closing resources: " + e.getMessage());
+            }
+        }
+    }
+
+	public static void setCon(Connection con) {
+		ReporterDao.con = con;
+	}
+}

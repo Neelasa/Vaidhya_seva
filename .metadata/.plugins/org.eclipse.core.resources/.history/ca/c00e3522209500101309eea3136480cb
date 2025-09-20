@@ -1,0 +1,26 @@
+package Doctor.view;
+
+import Doctor.dao.AdminDao;
+import Doctor.dao.ReporterDao;
+
+import javax.swing.*;
+
+public class DoctorView {
+    public static void main(String[] args) {
+        while (true) {
+            String[] options = {"Manage Doctor", "Check Doctor Leave", "Exit"};
+            int choice = JOptionPane.showOptionDialog(null, "Choose an option", "Doctor Portal",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+            switch (choice) {
+                case 0 ->AdminDao.main(null); // triggers CRUD menu
+                case 1 -> {
+                    String doctorId = JOptionPane.showInputDialog("Enter Doctor ID to check leave:");
+                    ReporterDao.checkDoctorLeave(doctorId);
+                }
+                case 2 -> System.exit(0);
+                default -> JOptionPane.showMessageDialog(null, "Invalid choice");
+            }
+        }
+    }
+}

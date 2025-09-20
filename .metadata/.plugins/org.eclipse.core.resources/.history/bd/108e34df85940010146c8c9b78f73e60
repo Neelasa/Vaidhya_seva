@@ -1,0 +1,5 @@
+package Doctor.bean;
+
+public class AppointmentBean {
+
+}

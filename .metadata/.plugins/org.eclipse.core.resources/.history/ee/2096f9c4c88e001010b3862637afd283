@@ -1,0 +1,19 @@
+package datastructureday2oftraining;
+
+public class Datastructures {
+
+	public static void main(String[] args) {
+		int marks[] = {22,33,44,55,66,77};
+//		int marks[] = new int[4];
+//		int marks[] = 22;
+		
+		//for(int i=0;i<marks.length;i++)
+		for(int n:marks)
+		{
+			//System.out.println(marks[i]);
+			System.out.println(n);
+		}
+
+	}
+
+}

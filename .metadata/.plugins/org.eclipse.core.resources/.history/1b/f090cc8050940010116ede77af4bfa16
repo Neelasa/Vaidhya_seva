@@ -1,0 +1,76 @@
+package DBCOM;
+
+import java.sql.*;
+import java.util.*;
+
+public class Dbcom 
+{
+	public static void main(String[] args)throws ClassNotFoundException ,SQLException
+	{
+	
+		/*
+		Class.forName("com.mysql.cj.jdbc.Driver");//register and loading
+		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/vasavi","root","HAREKRISHNA");
+		System.out.println("Connected successfully......");	
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter roolno:");
+		int roolno = sc.nextInt();
+		// no need of name and branch in delete program
+		
+		System.out.println("Enter name:");
+		String name = sc.next();
+		System.out.println("Enter branch:");
+		String branch = sc.next();
+		*/
+		// to insert the data into the record the following will be the required code
+	/*
+		PreparedStatement ps = con.prepareStatement("INSERT INTO student VALUES (?, ?, ?)");
+        ps.setInt(1, roolno);
+        ps.setString(2, name);
+        ps.setString(3, branch);
+
+        int i = ps.executeUpdate();
+        System.out.println(i + " record(s) inserted successfully.");
+
+        sc.close();
+        con.close();
+
+		*/
+		// to update the data in the record
+		
+		/*
+		PreparedStatement ps = con.prepareStatement("Update student set name =? , branch = ? where roolno =?");
+		 
+        ps.setString(1, name);
+        ps.setString(2, branch);
+        ps.setInt(3, roolno);
+        
+        int i = ps.executeUpdate();
+        System.out.println(i + " record updated successfully....");
+
+        */
+		// to delete a record from the existing table.
+		
+		
+		Class.forName("com.mysql.cj.jdbc.Driver");//register and loading
+		Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/vasavi","root","HAREKRISHNA");
+		System.out.println("Connected successfully......");	
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter roolno:");
+		int roolno = sc.nextInt();
+		
+		/*
+		PreparedStatement ps = con.prepareStatement("Delete from student where roolno =?");
+        ps.setInt(1, roolno);
+        int i = ps.executeUpdate();
+        System.out.println(i + " record deleted successfully....");
+		*/
+       
+		PreparedStatement ps = con.prepareStatement("select * from student where roolno =?");
+        ps.setInt(1, roolno);
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()) {
+			System.out.println(rs.getInt("roolno")+" "+rs.getString(2)+" " +rs.getString(8));
+		}
+	}
+}

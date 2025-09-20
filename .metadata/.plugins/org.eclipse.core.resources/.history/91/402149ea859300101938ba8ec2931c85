@@ -1,0 +1,25 @@
+package Day5OfJavaProgramming;
+
+public class Demo {
+
+	public static void main(String[] args) 
+	{
+		int x =22;
+		int y=0;
+		try
+		{
+			System.out.println("welcome to Division program");
+			System.out.println("Division of"+x+"/"+y+"is :"+(x/y));
+		}
+		catch(Exception e)
+		{
+			System.out.println(e);
+		}
+		finally
+		{
+			System.out.println("Byee...........");
+		}
+
+	}
+
+}

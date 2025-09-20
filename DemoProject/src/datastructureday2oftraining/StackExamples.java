@@ -1,0 +1,59 @@
+package datastructureday2oftraining;
+
+public class StackExamples 
+{
+	int arr[];
+	int top=-1;
+	//int tail=0;
+	
+	StackExamples(int size)
+	{
+		arr = new int[size];
+	}
+	public void push(int data)
+	{
+		if(top < arr.length-1)
+		{
+			arr[++top] = data;
+		}
+		else
+		{
+			System.out.println("Stack overflow");
+		}
+	}
+	public void display()
+	{
+		for(int n :arr)
+		{
+			System.out.println(n);
+		}
+	}
+	public static void main(String[] args) 
+	{
+		StackExamples st = new StackExamples(5);
+		st.push(11);
+		st.push(22);
+		st.push(33);
+		st.push(44);
+		st.push(55);
+		
+		st.display();
+		System.out.println("the popped element is "+st.pop());
+	}
+	public int pop()
+	{
+		if(top >- 1)
+		{
+			return arr[top--];
+		}
+		
+		else
+		{
+			System.out.println("there are no elements to delete");
+		}
+		return -1;
+	}
+	
+	
+
+}

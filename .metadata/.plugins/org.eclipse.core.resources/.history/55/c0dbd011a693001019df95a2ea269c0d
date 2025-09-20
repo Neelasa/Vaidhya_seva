@@ -1,0 +1,21 @@
+package Day5OfJavaProgramming;
+
+import java.util.Scanner;
+
+public class Bank {
+
+	public static void main(String[] args) 
+	{
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the total amount in your bank:");
+		long amt = sc.nextLong();
+		System.out.println("The total amount in your bank is"+amt);
+		System.out.println("Enter the amount to withdraw from your account:");
+		double wd = sc.nextDouble();
+		System.out.println("The amount rremaining after withdrawing is:"+wd);
+		
+		
+
+	}
+
+}

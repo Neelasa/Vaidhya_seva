@@ -1,0 +1,44 @@
+package Doctor.dao;
+
+import Doctor.bean.DoctorBean;
+import java.sql.*;
+
+public class DoctorDao {
+
+    static final String DB_URL = "jdbc:mysql://localhost:3306/vaidhya_seva";
+    static final String USER = "root";
+    static final String PASS = "HAREKRISHNA";
+
+    public static Connection getCon() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection(DB_URL, USER, PASS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static DoctorBean getDoctorById(Object object) {
+        DoctorBean bean = null;
+        try (Connection conn = getCon()) {
+            String sql = "SELECT * FROM doctor WHERE DoctorId = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, object);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                bean = new DoctorBean();
+                bean.setDoctorID(rs.getString("DoctorId"));
+                bean.setDoctorName(rs.getString("DoctorName"));
+                bean.setSpecilization(rs.getString("Specialization"));
+                // Add other setters if needed, e.g.:
+                // bean.setQualification(rs.getString("Qualification"));
+                // bean.setContactNumber(rs.getString("ContactNumber"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return bean;
+    }
+}

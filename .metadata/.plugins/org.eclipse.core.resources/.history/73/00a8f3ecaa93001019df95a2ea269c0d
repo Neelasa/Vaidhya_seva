@@ -1,0 +1,15 @@
+package Day5OfJavaProgramming;
+
+public class InvalidWithDrawException extends Exception
+{
+	private double wd;
+	
+	InvalidWithDrawException(double wd)
+	{
+		this.wd = wd;
+	}
+	@Override
+	public String toString() {
+		return "InvalidWithDrawException [wd=" + wd + "]";
+	}
+}
